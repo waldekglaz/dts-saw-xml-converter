@@ -2,6 +2,19 @@ import pandas as pd
 import glob
 import os
 
+"""
+DTS-SAW Excel to XML Converter
+------------------------------
+This script processes Excel (.xlsx) files and converts them into XML format
+for industrial saw machines. 
+
+Logic:
+- Finds all .xlsx files in the current directory.
+- Maps columns based on a specific template (starting at Column C).
+- Handles grain as a boolean (1/0 or yes/no).
+- Outputs an XML file for each Excel file with identical naming.
+"""
+
 def process_file(excel_file):
     print(f"Processing file: {excel_file}")
     

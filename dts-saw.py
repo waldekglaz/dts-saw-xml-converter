@@ -12,9 +12,9 @@ def process_file(excel_file):
         print(f"Error reading file '{excel_file}': {e}")
         return
 
-    # Check if we have enough columns
-    if len(df.columns) < 5:
-        print(f"Skipping '{excel_file}': Must have at least 5 columns (Width, Length, Qty, Grain, Description)")
+    # Check if we have enough columns (up to Description at Col G)
+    if len(df.columns) < 7:
+        print(f"Skipping '{excel_file}': Must have at least 7 columns (Ignore, Ignore, Length, Width, Qty, Grain, Description)")
         return
 
     # Prepare XML content
@@ -25,11 +25,12 @@ def process_file(excel_file):
 
     for index, row in df.iterrows():
         try:
-            width = float(row.iloc[0])
-            length = float(row.iloc[1])
-            qty = int(row.iloc[2]) if not pd.isna(row.iloc[2]) else 0
+            # New Mapping: A=0(Ign), B=1(Ign), C=2(Length), D=3(Width), E=4(Qty), F=5(Grain), G=6(Desc), H=7(SecDesc)
+            length = float(row.iloc[2])
+            width = float(row.iloc[3])
+            qty = int(row.iloc[4]) if not pd.isna(row.iloc[4]) else 0
             
-            raw_grain = row.iloc[3]
+            raw_grain = row.iloc[5]
             grain = 0
             if not pd.isna(raw_grain):
                 s_grain = str(raw_grain).strip().lower()
@@ -43,12 +44,12 @@ def process_file(excel_file):
                     except:
                         grain = 0
 
-            desc = str(row.iloc[4]) if not pd.isna(row.iloc[4]) else ""
+            desc = str(row.iloc[6]) if not pd.isna(row.iloc[6]) else ""
             
-            # Check for optional 6th column (Secondary Description)
+            # Check for optional 8th column (Secondary Description at Col H)
             sec_desc = ""
-            if len(row) > 5:
-                 val = row.iloc[5]
+            if len(row) > 7:
+                 val = row.iloc[7]
                  if not pd.isna(val):
                      sec_desc = str(val)
 
